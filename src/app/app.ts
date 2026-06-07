@@ -1,12 +1,12 @@
-import { Component, signal } from '@angular/core';
-import { ButtonModule } from 'primeng/button';
+import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { HeaderComponent } from './public/header/header';
+import { FooterComponent } from './public/footer/footer';
 
 @Component({
   selector: 'app-root',
-  imports: [ButtonModule],
+  imports: [RouterOutlet, HeaderComponent, FooterComponent],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrl: './app.css',
 })
-export class App {
-  protected readonly title = signal('tw2-tp-grupo-8');
-}
+export class App {}
