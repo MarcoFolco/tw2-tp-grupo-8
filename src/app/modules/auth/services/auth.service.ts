@@ -62,7 +62,7 @@ export class AuthService {
   // Decodifica el JWT del localStorage para restaurar el estado sin hacer un request extra.
   // El JWT no está encriptado — el payload es base64 legible por el cliente.
   private restoreFromToken(): Usuario | null {
-    const token = localStorage.getItem(this.TOKEN_KEY);
+    const token = this.getToken();
     if (!token) return null;
     try {
       const parts = token.split('.');
