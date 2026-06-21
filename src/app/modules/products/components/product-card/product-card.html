@@ -1,1 +1,11 @@
-<!-- TODO: implementar ProductCardComponent -->
+<div class="bg-zinc-900 p-3 rounded-lg flex flex-col gap-3 min-w-96">
+    <div class="flex flex-col gap-1">
+        <span class="text-zinc-400">{{producto().categoria.nombre}}</span>
+        <a [routerLink]="['/products',producto().slug]">
+            <h3 class="text-lg font-semibold w-fit hover:underline">{{producto().nombre}}</h3>
+        </a>
+    </div>
+    <div>
+        <p>{{producto().precio | currency}}</p>
+    </div>
+</div>
