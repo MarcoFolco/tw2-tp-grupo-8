@@ -1,5 +1,5 @@
-import { Component, signal, inject } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Component, OnInit, signal, inject } from '@angular/core';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {
   AbstractControl,
   FormBuilder,
@@ -9,76 +9,77 @@ import {
 } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Card } from 'primeng/card';
-import { InputText } from 'primeng/inputtext';
 import { Password } from 'primeng/password';
 import { Button } from 'primeng/button';
 import { Message } from 'primeng/message';
 import { AuthService } from '../../services/auth.service';
 
+type Estado = 'formulario' | 'exito' | 'expirado' | 'invalido';
+
 @Component({
-  selector: 'app-register-page',
-  templateUrl: './register.html',
-  imports: [ReactiveFormsModule, RouterLink, Card, InputText, Password, Button, Message],
+  selector: 'app-reset-password-page',
+  templateUrl: './reset-password.html',
+  imports: [ReactiveFormsModule, RouterLink, Card, Password, Button, Message],
 })
-export class RegisterPage {
+export class ResetPasswordPage implements OnInit {
   private authService = inject(AuthService);
+  private route = inject(ActivatedRoute);
   private router = inject(Router);
   private fb = inject(FormBuilder);
 
-  registerForm = this.fb.group(
+  private token = '';
+
+  form = this.fb.group(
     {
-      nombre: ['', [Validators.required]],
-      apellido: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]],
-      direccion: ['', [Validators.required]],
       password: ['', [Validators.required, this.passwordComplexityValidator()]],
       confirmarPassword: ['', [Validators.required]],
     },
     { validators: this.passwordMatchValidator() },
   );
 
-  errorMessage = signal<string | null>(null);
+  estado = signal<Estado>('formulario');
   loading = signal(false);
 
   get passwordErrors(): string | null {
-    const errors = this.registerForm.get('password')?.errors;
+    const errors = this.form.get('password')?.errors;
     if (!errors) return null;
     return typeof errors['complexity'] === 'string' ? errors['complexity'] : null;
   }
 
   get passwordMismatch(): boolean {
     return (
-      this.registerForm.hasError('mismatch') &&
-      (this.registerForm.get('confirmarPassword')?.touched ?? false)
+      this.form.hasError('mismatch') &&
+      (this.form.get('confirmarPassword')?.touched ?? false)
     );
   }
 
+  ngOnInit(): void {
+    const token = this.route.snapshot.queryParamMap.get('token');
+    if (!token) {
+      this.estado.set('invalido');
+      return;
+    }
+    this.token = token;
+  }
+
   onSubmit(): void {
-    if (this.registerForm.invalid) return;
+    if (this.form.invalid) return;
 
-    const { confirmarPassword: _c, ...formData } = this.registerForm.value;
     this.loading.set(true);
-    this.errorMessage.set(null);
-
-    this.authService
-      .register({
-        nombre: formData.nombre!,
-        apellido: formData.apellido!,
-        email: formData.email!,
-        direccion: formData.direccion!,
-        password: formData.password!,
-      })
-      .subscribe({
-        next: () => void this.router.navigate(['/auth/email-enviado']),
-        error: (err: HttpErrorResponse) => {
-          const msg =
-            typeof err.error?.error === 'string'
-              ? err.error.error
-              : 'Error al registrarse. Intentá de nuevo.';
-          this.errorMessage.set(msg);
-          this.loading.set(false);
-        },
-      });
+    this.authService.resetPassword(this.token, this.form.value.password!).subscribe({
+      next: () => {
+        this.estado.set('exito');
+        this.loading.set(false);
+      },
+      error: (err: HttpErrorResponse) => {
+        if (err.status === 410) {
+          this.estado.set('expirado');
+        } else {
+          this.estado.set('invalido');
+        }
+        this.loading.set(false);
+      },
+    });
   }
 
   private passwordComplexityValidator(): ValidatorFn {

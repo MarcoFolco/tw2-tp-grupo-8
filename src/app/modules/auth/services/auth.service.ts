@@ -4,7 +4,7 @@ import { Observable, tap, map } from 'rxjs';
 import { Usuario } from '../interfaces/usuario.interface';
 import { environment } from '../../../../environments/environment';
 
-interface AuthResponse {
+interface LoginResponse {
   token: string;
   user: Usuario;
 }
@@ -28,7 +28,7 @@ export class AuthService {
 
   login(email: string, password: string): Observable<void> {
     return this.http
-      .post<AuthResponse>(`${environment.apiUrl}/auth/login`, { email, password })
+      .post<LoginResponse>(`${environment.apiUrl}/auth/login`, { email, password })
       .pipe(
         tap(({ token, user }) => {
           localStorage.setItem(this.TOKEN_KEY, token);
@@ -40,14 +40,28 @@ export class AuthService {
 
   register(data: RegisterData): Observable<void> {
     return this.http
-      .post<AuthResponse>(`${environment.apiUrl}/auth/register`, data)
-      .pipe(
-        tap(({ token, user }) => {
-          localStorage.setItem(this.TOKEN_KEY, token);
-          this._currentUser.set(user);
-        }),
-        map(() => undefined),
-      );
+      .post<{ user: Usuario }>(`${environment.apiUrl}/auth/register`, data)
+      .pipe(map(() => undefined));
+  }
+
+  verifyEmail(token: string): Observable<void> {
+    return this.http
+      .get<void>(`${environment.apiUrl}/auth/verificar`, { params: { token } });
+  }
+
+  resendVerification(email: string): Observable<void> {
+    return this.http
+      .post<void>(`${environment.apiUrl}/auth/resend-verification`, { email });
+  }
+
+  requestPasswordReset(email: string): Observable<void> {
+    return this.http
+      .post<void>(`${environment.apiUrl}/auth/forgot-password`, { email });
+  }
+
+  resetPassword(token: string, password: string): Observable<void> {
+    return this.http
+      .post<void>(`${environment.apiUrl}/auth/reset-password`, { token, password });
   }
 
   logout(): void {
