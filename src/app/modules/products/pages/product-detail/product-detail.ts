@@ -3,18 +3,20 @@ import { ActivatedRoute } from '@angular/router';
 import { ProductService } from '../../services/products.service';
 import { Producto } from '../../interfaces/producto.interface';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { HttpErrorResponse } from '@angular/common/http';
+import { ProductNotFound } from "../../components/product-not-found/product-not-found";
 
 @Component({
   selector: 'app-product-detail-page',
   templateUrl: './product-detail.html',
-  imports: [ProgressSpinnerModule],
+  imports: [ProgressSpinnerModule, ProductNotFound],
 })
 export class ProductDetailPage implements OnInit {
 
   private activatedRoute = inject(ActivatedRoute);
   private productService = inject(ProductService);
   readonly product = signal<Producto | null>(null);
-  readonly error = signal<string | null>(null);
+  readonly error = signal<HttpErrorResponse | null>(null);
   readonly loading = signal<boolean>(false);
 
   ngOnInit() {
@@ -34,7 +36,7 @@ export class ProductDetailPage implements OnInit {
         this.product.set(product);
         this.loading.set(false);
       },
-      error: (error) => {
+      error: (error: HttpErrorResponse) => {
         this.error.set(error);
         this.loading.set(false);
       },

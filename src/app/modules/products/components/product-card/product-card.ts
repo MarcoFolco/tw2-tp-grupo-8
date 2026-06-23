@@ -1,15 +1,40 @@
-import { Component, input } from '@angular/core';
-import { CurrencyPipe } from '@angular/common';
+import { Component, computed, input, OnInit } from '@angular/core';
+import { CurrencyPipe, NgClass } from '@angular/common';
 import { Producto } from '../../interfaces/producto.interface';
 import { CardModule } from "primeng/card";
 import { RouterLink } from "@angular/router";
-
+import { CardStock } from '../../interfaces/stock.interface';
 @Component({
   selector: 'app-product-card',
   templateUrl: './product-card.html',
   standalone: true,
-  imports: [CurrencyPipe, CardModule, RouterLink]
+  imports: [CurrencyPipe, CardModule, RouterLink, NgClass]
 })
 export class ProductCardComponent {
+
   producto = input.required<Producto>();
+
+  readonly stockStatus = computed<CardStock>(() => {
+    const stock = this.producto().stock;
+
+    if (stock > 10) {
+      return {
+        classStyle: "bg-green-700",
+        icon: "pi pi-check",
+        label: "Disponible"
+      }
+    }
+    if (stock > 0) {
+      return {
+        classStyle: "bg-yellow-500",
+        icon: "pi pi-clock",
+        label: "Ultimas unidades"
+      }
+    }
+    return {
+      classStyle: "bg-red-500",
+      icon: "pi pi-times",
+      label: "Sin stock"
+    }
+  })
 }
