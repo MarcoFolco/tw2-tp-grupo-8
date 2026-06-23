@@ -12,4 +12,8 @@ export class ProductService {
   getProducts(): Observable<Producto[]> {
     return this.http.get<Producto[]>(`${environment.apiUrl}/productos`);
   }
+
+  getProductBySlug(slug: string): Observable<Producto> {
+    return this.http.get<Producto>(`${environment.apiUrl}/productos/${slug}`);
+  }
 }
