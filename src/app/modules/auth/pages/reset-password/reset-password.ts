@@ -11,7 +11,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Card } from 'primeng/card';
 import { Password } from 'primeng/password';
 import { Button } from 'primeng/button';
-import { Message } from 'primeng/message';
 import { AuthService } from '../../services/auth.service';
 
 type Estado = 'formulario' | 'exito' | 'expirado' | 'invalido';
@@ -19,7 +18,7 @@ type Estado = 'formulario' | 'exito' | 'expirado' | 'invalido';
 @Component({
   selector: 'app-reset-password-page',
   templateUrl: './reset-password.html',
-  imports: [ReactiveFormsModule, RouterLink, Card, Password, Button, Message],
+  imports: [ReactiveFormsModule, RouterLink, Card, Password, Button],
 })
 export class ResetPasswordPage implements OnInit {
   private authService = inject(AuthService);

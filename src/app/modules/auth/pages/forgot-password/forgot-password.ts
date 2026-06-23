@@ -4,13 +4,12 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Card } from 'primeng/card';
 import { InputText } from 'primeng/inputtext';
 import { Button } from 'primeng/button';
-import { Message } from 'primeng/message';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-forgot-password-page',
   templateUrl: './forgot-password.html',
-  imports: [ReactiveFormsModule, RouterLink, Card, InputText, Button, Message],
+  imports: [ReactiveFormsModule, RouterLink, Card, InputText, Button],
 })
 export class ForgotPasswordPage {
   private authService = inject(AuthService);
