@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { ProductService } from '../../services/products.service';
 import { Producto } from '../../interfaces/producto.interface';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
@@ -15,6 +15,7 @@ export class ProductListPage {
   products = signal<Producto[]>([]);
   loading = signal(true);
   error = signal<string | null>(null);
+  searchText = signal('');
 
   constructor() {
     this.loadProducts();
@@ -34,5 +35,16 @@ export class ProductListPage {
         this.loading.set(false);
       }
     });
+  }
+
+  filterProducts = computed(() => {
+    const query = this.searchText().toLowerCase().trim();
+    if (!query) return this.products();
+    return this.products().filter(p => p.nombre.toLowerCase().includes(query))
+  })
+
+  updateText(event: InputEvent): void {
+    const text = event.target as HTMLInputElement;
+    this.searchText.set(text.value);
   }
 }
