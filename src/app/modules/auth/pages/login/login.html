@@ -31,6 +31,26 @@
         <p-message severity="error">{{ errorMessage() }}</p-message>
       }
 
+      @if (emailNoVerificado()) {
+        <p-message severity="warn">
+          Tu email todavía no fue verificado. Revisá tu bandeja de entrada (y la carpeta de spam).
+        </p-message>
+        @if (resendSent()) {
+          <p-message severity="success">Te enviamos un nuevo link de verificación.</p-message>
+        } @else {
+          <p-button
+            type="button"
+            label="Reenviar email de verificación"
+            icon="pi pi-envelope"
+            severity="secondary"
+            [loading]="resendLoading()"
+            [disabled]="resendLoading()"
+            styleClass="w-full"
+            (onClick)="onResendVerification()"
+          />
+        }
+      }
+
       <p-button
         type="submit"
         label="Ingresar"
@@ -42,10 +62,15 @@
 
     </form>
 
-    <div class="text-center mt-4">
-      <span class="text-color-secondary">¿No tenés cuenta? </span>
-      <a [routerLink]="'/auth/register'" class="text-primary no-underline font-medium">
-        Registrate
+    <div class="flex flex-column gap-2 text-center mt-4">
+      <div>
+        <span class="text-color-secondary">¿No tenés cuenta? </span>
+        <a [routerLink]="'/auth/register'" class="text-primary no-underline font-medium">
+          Registrate
+        </a>
+      </div>
+      <a [routerLink]="'/auth/forgot-password'" class="text-primary font-medium no-underline">
+        ¿Olvidaste tu contraseña?
       </a>
     </div>
 
