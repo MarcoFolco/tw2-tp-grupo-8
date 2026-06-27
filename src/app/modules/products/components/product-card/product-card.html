@@ -33,10 +33,13 @@
                 {{ producto().precio | currency:'$ ':'symbol':'1.0-0' }}
             </p>
         </div>
+<<<<<<< HEAD
 
         <button (click)="cartService.agregar(producto())" [disabled]="producto().stock === 0"
             class="w-full mt-2 py-1 bg-white text-black rounded hover:bg-zinc-300 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-semibold">
             Agregar al carrito
         </button>
+=======
+>>>>>>> 79a35bf231facb0271c0b97451b8d2ae92a3ab7e
     </div>
 </div>
