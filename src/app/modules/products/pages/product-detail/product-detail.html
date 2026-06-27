@@ -1,0 +1,9 @@
+@if(this.error()){
+<app-product-not-found [error]="this.error()"></app-product-not-found>
+}@else if (this.loading()) {
+<p-progress-spinner />
+}@else if(this.product()){
+<h2>
+    {{this.product()?.nombre}}
+</h2>
+}

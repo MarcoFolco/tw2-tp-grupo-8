@@ -1,0 +1,20 @@
+<p-menubar [model]="menuItems()">
+  <ng-template #start>
+    <div class="flex align-items-center gap-2 mr-4">
+      <i class="pi pi-shopping-bag text-primary text-2xl"></i>
+      <span class="font-bold text-xl">E-commerce</span>
+    </div>
+  </ng-template>
+
+  <ng-template #end>
+    <div class="flex align-items-center gap-3">
+      @if (authService.isLoggedIn()) {
+      <span class="text-color-secondary text-sm hidden md:block">
+        {{ authService.currentUser()?.nombre }} {{ authService.currentUser()?.apellido }}
+      </span>
+      <p-button icon="pi pi-sign-out" label="Salir" severity="secondary" [text]="true" size="small"
+        (onClick)="logout()" />
+      }
+    </div>
+  </ng-template>
+</p-menubar>

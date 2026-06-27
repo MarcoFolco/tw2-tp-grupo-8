@@ -1,0 +1,53 @@
+<div class="flex align-items-center justify-content-center min-h-screen surface-ground px-4">
+  <p-card class="w-full md:w-5 lg:w-4" header="Iniciar Sesión">
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="flex flex-column gap-4">
+
+      <div class="flex flex-column gap-2">
+        <label for="email" class="font-medium">Email</label>
+        <input
+          pInputText
+          id="email"
+          type="email"
+          formControlName="email"
+          placeholder="email@ejemplo.com"
+          class="w-full"
+        />
+      </div>
+
+      <div class="flex flex-column gap-2">
+        <label for="password" class="font-medium">Contraseña</label>
+        <p-password
+          inputId="password"
+          formControlName="password"
+          [feedback]="false"
+          [toggleMask]="true"
+          styleClass="w-full"
+          inputStyleClass="w-full"
+        />
+      </div>
+
+      @if (errorMessage()) {
+        <p-message severity="error">{{ errorMessage() }}</p-message>
+      }
+
+      <p-button
+        type="submit"
+        label="Ingresar"
+        icon="pi pi-sign-in"
+        [loading]="loading()"
+        [disabled]="loginForm.invalid || loading()"
+        styleClass="w-full"
+      />
+
+    </form>
+
+    <div class="text-center mt-4">
+      <span class="text-color-secondary">¿No tenés cuenta? </span>
+      <a [routerLink]="'/auth/register'" class="text-primary no-underline font-medium">
+        Registrate
+      </a>
+    </div>
+
+  </p-card>
+</div>

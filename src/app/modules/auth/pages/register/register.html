@@ -1,0 +1,87 @@
+<div class="flex align-items-center justify-content-center min-h-screen surface-ground px-4 py-6">
+  <p-card class="w-full md:w-7 lg:w-5" header="Crear cuenta">
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="flex flex-column gap-4">
+
+      <div class="grid">
+        <div class="col-12 md:col-6 flex flex-column gap-2">
+          <label for="nombre" class="font-medium">Nombre</label>
+          <input pInputText id="nombre" formControlName="nombre" class="w-full" />
+        </div>
+        <div class="col-12 md:col-6 flex flex-column gap-2">
+          <label for="apellido" class="font-medium">Apellido</label>
+          <input pInputText id="apellido" formControlName="apellido" class="w-full" />
+        </div>
+      </div>
+
+      <div class="flex flex-column gap-2">
+        <label for="email" class="font-medium">Email</label>
+        <input
+          pInputText
+          id="email"
+          type="email"
+          formControlName="email"
+          placeholder="email@ejemplo.com"
+          class="w-full"
+        />
+      </div>
+
+      <div class="flex flex-column gap-2">
+        <label for="direccion" class="font-medium">Dirección</label>
+        <input pInputText id="direccion" formControlName="direccion" class="w-full" />
+      </div>
+
+      <div class="flex flex-column gap-2">
+        <label for="password" class="font-medium">Contraseña</label>
+        <p-password
+          inputId="password"
+          formControlName="password"
+          [feedback]="true"
+          [toggleMask]="true"
+          styleClass="w-full"
+          inputStyleClass="w-full"
+        />
+        @if (passwordErrors) {
+          <small class="text-red-500">{{ passwordErrors }}</small>
+        }
+      </div>
+
+      <div class="flex flex-column gap-2">
+        <label for="confirmarPassword" class="font-medium">Confirmar contraseña</label>
+        <p-password
+          inputId="confirmarPassword"
+          formControlName="confirmarPassword"
+          [feedback]="false"
+          [toggleMask]="true"
+          styleClass="w-full"
+          inputStyleClass="w-full"
+        />
+        @if (passwordMismatch) {
+          <small class="text-red-500">Las contraseñas no coinciden</small>
+        }
+      </div>
+
+      @if (errorMessage()) {
+        <p-message severity="error">{{ errorMessage() }}</p-message>
+      }
+
+      <p-button
+        type="submit"
+        label="Crear cuenta"
+        icon="pi pi-user-plus"
+        [loading]="loading()"
+        [disabled]="registerForm.invalid || loading()"
+        styleClass="w-full"
+      />
+
+    </form>
+
+    <div class="text-center mt-4">
+      <span class="text-color-secondary">¿Ya tenés cuenta? </span>
+      <a [routerLink]="'/auth/login'" class="text-primary no-underline font-medium">
+        Iniciá sesión
+      </a>
+    </div>
+
+  </p-card>
+</div>
