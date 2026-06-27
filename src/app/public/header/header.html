@@ -7,20 +7,14 @@
   </ng-template>
 
   <ng-template #end>
-    @if (authService.isLoggedIn()) {
-      <div class="flex align-items-center gap-3">
-        <span class="text-color-secondary text-sm hidden md:block">
-          {{ authService.currentUser()?.nombre }} {{ authService.currentUser()?.apellido }}
-        </span>
-        <p-button
-          icon="pi pi-sign-out"
-          label="Salir"
-          severity="secondary"
-          [text]="true"
-          size="small"
-          (onClick)="logout()"
-        />
-      </div>
-    }
+    <div class="flex align-items-center gap-3">
+      @if (authService.isLoggedIn()) {
+      <span class="text-color-secondary text-sm hidden md:block">
+        {{ authService.currentUser()?.nombre }} {{ authService.currentUser()?.apellido }}
+      </span>
+      <p-button icon="pi pi-sign-out" label="Salir" severity="secondary" [text]="true" size="small"
+        (onClick)="logout()" />
+      }
+    </div>
   </ng-template>
 </p-menubar>
