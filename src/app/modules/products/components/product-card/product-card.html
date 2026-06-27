@@ -35,9 +35,12 @@
                 {{ producto().precio | currency:'$ ':'symbol':'1.0-0' }}
             </p>
         </div>
-        <button (click)="cartService.agregar(producto())" [disabled]="producto().stock === 0"
-            class="w-full mt-2 py-1 bg-white text-black rounded hover:bg-zinc-300 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-semibold">
-            Agregar al carrito
-        </button>
+        <p-button
+            label="Agregar al carrito"
+            icon="pi pi-shopping-cart"
+            styleClass="w-full"
+            [disabled]="producto().stock === 0"
+            (onClick)="agregarAlCarrito()"
+        />
     </div>
 </div>

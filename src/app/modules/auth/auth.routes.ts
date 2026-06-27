@@ -5,6 +5,7 @@ import { EmailEnviadoPage } from './pages/email-enviado/email-enviado';
 import { VerificarEmailPage } from './pages/verificar-email/verificar-email';
 import { ForgotPasswordPage } from './pages/forgot-password/forgot-password';
 import { ResetPasswordPage } from './pages/reset-password/reset-password';
+import { guestGuard } from '../../core/guards/guest.guard';
 
 export const authRoutes: Routes = [
   {
@@ -15,12 +16,12 @@ export const authRoutes: Routes = [
   {
     path: 'login',
     component: LoginPage,
-    // canActivate: [guestGuard]  ← agregar cuando esté implementado
+    canActivate: [guestGuard],
   },
   {
     path: 'register',
     component: RegisterPage,
-    // canActivate: [guestGuard]  ← agregar cuando esté implementado
+    canActivate: [guestGuard],
   },
   {
     path: 'email-enviado',
