@@ -43,7 +43,7 @@ export class ProductListPage {
     return this.products().filter(p => p.nombre.toLowerCase().includes(query))
   })
 
-  updateText(event: InputEvent): void {
+  updateText(event: Event): void {
     const text = event.target as HTMLInputElement;
     this.searchText.set(text.value);
   }
