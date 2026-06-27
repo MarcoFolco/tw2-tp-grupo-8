@@ -16,8 +16,6 @@ export class CartService {
       return acc + precio * item.cantidad;
     }, 0)
   );
-<<<<<<< HEAD
-
   agregar(producto: Producto): void {
     const items = this._items();
     const existente = items.find(i => i.producto.id === producto.id);
@@ -50,6 +48,3 @@ export class CartService {
     this._items.set([]);
   }
 }
-=======
-}
->>>>>>> 79a35bf231facb0271c0b97451b8d2ae92a3ab7e
