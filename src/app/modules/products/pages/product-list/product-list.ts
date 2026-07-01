@@ -21,11 +21,11 @@ export class ProductListPage {
     this.loadProducts();
   }
 
-  loadProducts() {
+  loadProducts(categoria?: string) {
     this.loading.set(true);
     this.error.set(null);
 
-    this.productsService.getProducts().subscribe({
+    this.productsService.getProducts(categoria).subscribe({
       next: (products) => {
         this.products.set(products);
         this.loading.set(false);
