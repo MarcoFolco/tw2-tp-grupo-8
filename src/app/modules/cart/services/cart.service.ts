@@ -1,11 +1,13 @@
-import { Injectable, signal, computed, effect } from '@angular/core';
+import { Injectable, signal, computed, effect, inject } from '@angular/core';
 import { ItemCarrito } from '../interfaces/item-carrito.interface';
 import { Producto } from '../../products/interfaces/producto.interface';
-
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../environments/environment.development';
 const CART_KEY = 'carrito';
 
 @Injectable({ providedIn: 'root' })
 export class CartService {
+  private readonly http = inject(HttpClient);
   private readonly _items = signal<ItemCarrito[]>(this.cargarDesdeStorage());
 
   readonly items = this._items.asReadonly();
@@ -50,6 +52,29 @@ export class CartService {
       i.producto.id === productoId ? { ...i, cantidad } : i
     ));
   }
+
+
+
+checkout(usuarioId: number) {
+  
+  const itemsParaElBackend = this._items().map(item => {
+    const precioFinal = item.producto.oferta?.precioOferta ?? item.producto.precio;
+    
+    return {
+      productoId: item.producto.id,
+      precio: precioFinal,
+      cantidad: item.cantidad
+    };
+  });
+
+  const pedido = {
+    usuarioId: usuarioId,
+    items: itemsParaElBackend
+  };
+
+  return this.http.post(`${environment.apiUrl}/pedidos`, pedido);
+}
+
 
   vaciar(): void {
     this._items.set([]);
