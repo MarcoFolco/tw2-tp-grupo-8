@@ -2,3 +2,7 @@
 @import "primeicons/primeicons.css";
 @import "primeflex/primeflex.css";
 @import "tailwindcss";
+
+app-root {
+  display: block;
+}
