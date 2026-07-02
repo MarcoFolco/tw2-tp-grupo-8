@@ -1,151 +1,88 @@
-<<<<<<< HEAD
-@if(this.error()){
-<app-product-not-found [error]="this.error()"></app-product-not-found>
-} @else if (this.loading()) {
-<div class="flex justify-center items-center min-h-screen">
-    <p-progress-spinner strokeWidth="8" [style]="{ width: '50px', height: '50px' }" />
-</div>
-} @else if(this.product()) {
-<div class="p-6 max-w-300 mx-auto">
-    <div class="flex flex-col md:flex-row gap-8">
-
-        <div class="flex-1">
-            <img [src]="this.product()?.imagenUrl" [alt]="this.product()?.nombre"
-                class="w-full rounded-xl object-cover max-h-120" />
-        </div>
-
-        <div class="flex-1 flex flex-col gap-4">
-            <span class="text-sm text-zinc-500">{{ this.product()?.categoria?.nombre }}</span>
-            <h1 class="text-3xl font-semibold text-zinc-100">{{ this.product()?.nombre }}</h1>
-            <p class="text-zinc-400 text-sm leading-relaxed">{{ this.product()?.descripcion }}</p>
-
-            @if(this.product()?.oferta) {
-            <div class="flex items-center gap-3">
-                <span class="text-2xl font-bold text-green-400">
-                    {{ this.product()?.oferta?.precioOferta | currency:'$ ':'symbol':'1.0-0' }}
-                </span>
-                <span class="text-zinc-500 line-through text-sm">
-                    {{ this.product()?.precio | currency:'$ ':'symbol':'1.0-0' }}
-                </span>
-            </div>
-            } @else {
-            <span class="text-2xl font-bold text-zinc-100">
-                {{ this.product()?.precio | currency:'$ ':'symbol':'1.0-0' }}
-            </span>
-            }
-
-            <div class="flex items-center gap-2">
-                @if((this.product()?.stock ?? 0) > 10) {
-                <span class="bg-green-700 text-white text-xs px-3 py-1 rounded-full">Disponible</span>
-                } @else if((this.product()?.stock ?? 0) > 0) {
-                <span class="bg-yellow-500 text-white text-xs px-3 py-1 rounded-full">Últimas unidades</span>
-                } @else {
-                <span class="bg-red-500 text-white text-xs px-3 py-1 rounded-full">Sin stock</span>
-                }
-                <span class="text-zinc-500 text-sm">{{ this.product()?.stock }} disponibles</span>
-            </div>
-
-            @if(cartService.items().find(i => i.producto.id === this.product()!.id)) {
-            <div class="flex items-center gap-4 mt-2">
-                <button
-                    (click)="cartService.modificarCantidad(this.product()!.id, cartService.items().find(i => i.producto.id === this.product()!.id)!.cantidad - 1)"
-                    class="px-4 py-2 bg-zinc-700 text-white rounded-xl hover:bg-zinc-600 text-xl font-bold">-</button>
-                <span class="text-xl font-semibold text-zinc-100">
-                    {{ cartService.items().find(i => i.producto.id === this.product()!.id)!.cantidad }}
-                </span>
-                <button
-                    (click)="cartService.modificarCantidad(this.product()!.id, cartService.items().find(i => i.producto.id === this.product()!.id)!.cantidad + 1)"
-                    class="px-4 py-2 bg-zinc-700 text-white rounded-xl hover:bg-zinc-600 text-xl font-bold">+</button>
-            </div>
-            } @else {
-            <button (click)="cartService.agregar(this.product()!)" [disabled]="(this.product()?.stock ?? 0) === 0"
-                class="w-full py-3 bg-white text-black rounded-xl font-semibold hover:bg-zinc-300 disabled:opacity-50 disabled:cursor-not-allowed mt-2">
-                Agregar al carrito
-            </button>
-            }
-
-        </div>
-    </div>
-</div>
-}
-=======
 <div class="surface-ground min-h-screen px-4 py-6 flex align-items-center justify-content-center">
-  
-  @if (error()) {
+
+    @if (error()) {
     <app-product-not-found [error]="error()"></app-product-not-found>
-  } @else if (loading()) {
+    } @else if (loading()) {
     <div class="flex justify-content-center align-items-center py-8">
-      <p-progress-spinner />
+        <p-progress-spinner />
     </div>
-  } @else if (product(); as prod) {
+    } @else if (product(); as prod) {
     <p-card class="w-full max-w-5xl shadow-3">
-      
-      <div class="grid">
-        <!-- Columna Izquierda: Imagen del producto -->
-        <div class="col-12 md:col-6 flex justify-content-center align-items-center p-4">
-         <img 
-             [src]="prod.imagenUrl" 
-             onerror="this.src='https://primefaces.org/cdn/primeng/images/card-ng.jpg'" 
-             [alt]="prod.nombre" 
-             class="w-full border-round shadow-2 max-w-28rem object-cover aspect-square"
-             />
-        </div>
 
-        <!-- Columna Derecha: Detalles del producto -->
-        <div class="col-12 md:col-6 flex flex-column gap-3 p-4 justify-content-center">
-          
-          <!-- Botón Volver -->
-          <a routerLink="/products" class="text-primary no-underline font-medium flex align-items-center gap-2 mb-2 hover:underline">
-            <i class="pi pi-arrow-left"></i> Volver a productos
-          </a>
-
-          <!-- Categoría -->
-          <span class="text-sm text-color-secondary uppercase font-semibold tracking-wider">
-            {{ prod.categoria.nombre }}
-          </span>
-
-          <!-- Título del producto -->
-          <h1 class="text-3xl md:text-4xl font-bold m-0 text-zinc-100">
-            {{ prod.nombre }}
-          </h1>
-
-          <!-- Estado de Stock -->
-          @if (stockStatus(); as status) {
-            <div class="flex align-items-center gap-2">
-              <span [ngClass]="status.classStyle" class="text-white text-xs font-semibold px-3 py-1 border-round flex align-items-center gap-1">
-                <i [ngClass]="status.icon"></i>
-                {{ status.label }}
-              </span>
-              <span class="text-sm text-color-secondary">
-                ({{ prod.stock }} unidades disponibles)
-              </span>
+        <div class="grid">
+            <div class="col-12 md:col-6 flex justify-content-center align-items-center p-4">
+                <img [src]="prod.imagenUrl" onerror="this.src='https://primefaces.org/cdn/primeng/images/card-ng.jpg'"
+                    [alt]="prod.nombre" class="w-full border-round shadow-2 max-w-28rem object-cover aspect-square" />
             </div>
-          }
 
-          <!-- Descripción -->
-          <p class="text-color-secondary m-0 line-height-3 text-lg">
-            {{ prod.descripcion }}
-          </p>
+            <div class="col-12 md:col-6 flex flex-column gap-3 p-4 justify-content-center">
 
-          <!-- Precio -->
-          <div class="text-3xl font-bold text-primary mt-2">
-            {{ prod.precio | currency:'$ ':'symbol':'1.0-0' }}
-          </div>
+                <a routerLink="/products"
+                    class="text-primary no-underline font-medium flex align-items-center gap-2 mb-2 hover:underline">
+                    <i class="pi pi-arrow-left"></i> Volver a productos
+                </a>
 
-          <!-- Botón de acción -->
-          <p-button
-            label="Agregar al carrito"
-            icon="pi pi-shopping-cart"
-            styleClass="w-full mt-4 p-button-lg"
-            [disabled]="prod.stock === 0"
-            (onClick)="agregarAlCarrito()"
-          />
+                <span class="text-sm text-color-secondary uppercase font-semibold tracking-wider">
+                    {{ prod.categoria.nombre }}
+                </span>
 
+                <h1 class="text-3xl md:text-4xl font-bold m-0">
+                    {{ prod.nombre }}
+                </h1>
+
+                @if (stockStatus(); as status) {
+                <div class="flex align-items-center gap-2">
+                    <span [ngClass]="status.classStyle"
+                        class="text-white text-xs font-semibold px-3 py-1 border-round flex align-items-center gap-1">
+                        <i [ngClass]="status.icon"></i>
+                        {{ status.label }}
+                    </span>
+                    <span class="text-sm text-color-secondary">
+                        ({{ prod.stock }} unidades disponibles)
+                    </span>
+                </div>
+                }
+
+                <p class="text-color-secondary m-0 line-height-3 text-lg">
+                    {{ prod.descripcion }}
+                </p>
+
+                @if(prod.oferta) {
+                <div class="flex align-items-center gap-3">
+                    <span class="text-3xl font-bold text-green-500">
+                        {{ prod.oferta.precioOferta | currency:'$ ':'symbol':'1.0-0' }}
+                    </span>
+                    <span class="text-color-secondary line-through">
+                        {{ prod.precio | currency:'$ ':'symbol':'1.0-0' }}
+                    </span>
+                </div>
+                } @else {
+                <div class="text-3xl font-bold text-primary mt-2">
+                    {{ prod.precio | currency:'$ ':'symbol':'1.0-0' }}
+                </div>
+                }
+
+                @if (cartService.items().find(i => i.producto.id === prod?.id); as item) {
+                <div class="flex align-items-center gap-4 mt-4">
+                    <button
+                        (click)="cartService.modificarCantidad(prod.id, item.cantidad - 1)"
+                        class="px-4 py-2 bg-zinc-700 text-white rounded-xl hover:bg-zinc-600 text-xl font-bold">-</button>
+                    <span class="text-xl font-semibold">
+                        {{ item.cantidad }}
+                    </span>
+                    <button
+                        (click)="cartService.modificarCantidad(prod.id, item.cantidad + 1)"
+                        class="px-4 py-2 bg-zinc-700 text-white rounded-xl hover:bg-zinc-600 text-xl font-bold">+</button>
+                </div>
+                } @else {
+                <p-button label="Agregar al carrito" icon="pi pi-shopping-cart" styleClass="w-full mt-4 p-button-lg"
+                    [disabled]="prod.stock === 0" (onClick)="agregarAlCarrito()" />
+                }
+
+            </div>
         </div>
-      </div>
 
     </p-card>
-  }
+    }
 
 </div>
->>>>>>> b6c5a7f926770cd859799b0ed006eba519e88c7a
