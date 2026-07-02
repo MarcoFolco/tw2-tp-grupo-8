@@ -1,9 +1,69 @@
 @if(this.error()){
 <app-product-not-found [error]="this.error()"></app-product-not-found>
-}@else if (this.loading()) {
-<p-progress-spinner />
-}@else if(this.product()){
-<h2>
-    {{this.product()?.nombre}}
-</h2>
+} @else if (this.loading()) {
+<div class="flex justify-center items-center min-h-screen">
+    <p-progress-spinner strokeWidth="8" [style]="{ width: '50px', height: '50px' }" />
+</div>
+} @else if(this.product()) {
+<div class="p-6 max-w-300 mx-auto">
+    <div class="flex flex-col md:flex-row gap-8">
+
+        <div class="flex-1">
+            <img [src]="this.product()?.imagenUrl" [alt]="this.product()?.nombre"
+                class="w-full rounded-xl object-cover max-h-120" />
+        </div>
+
+        <div class="flex-1 flex flex-col gap-4">
+            <span class="text-sm text-zinc-500">{{ this.product()?.categoria?.nombre }}</span>
+            <h1 class="text-3xl font-semibold text-zinc-100">{{ this.product()?.nombre }}</h1>
+            <p class="text-zinc-400 text-sm leading-relaxed">{{ this.product()?.descripcion }}</p>
+
+            @if(this.product()?.oferta) {
+            <div class="flex items-center gap-3">
+                <span class="text-2xl font-bold text-green-400">
+                    {{ this.product()?.oferta?.precioOferta | currency:'$ ':'symbol':'1.0-0' }}
+                </span>
+                <span class="text-zinc-500 line-through text-sm">
+                    {{ this.product()?.precio | currency:'$ ':'symbol':'1.0-0' }}
+                </span>
+            </div>
+            } @else {
+            <span class="text-2xl font-bold text-zinc-100">
+                {{ this.product()?.precio | currency:'$ ':'symbol':'1.0-0' }}
+            </span>
+            }
+
+            <div class="flex items-center gap-2">
+                @if((this.product()?.stock ?? 0) > 10) {
+                <span class="bg-green-700 text-white text-xs px-3 py-1 rounded-full">Disponible</span>
+                } @else if((this.product()?.stock ?? 0) > 0) {
+                <span class="bg-yellow-500 text-white text-xs px-3 py-1 rounded-full">Últimas unidades</span>
+                } @else {
+                <span class="bg-red-500 text-white text-xs px-3 py-1 rounded-full">Sin stock</span>
+                }
+                <span class="text-zinc-500 text-sm">{{ this.product()?.stock }} disponibles</span>
+            </div>
+
+            @if(cartService.items().find(i => i.producto.id === this.product()!.id)) {
+            <div class="flex items-center gap-4 mt-2">
+                <button
+                    (click)="cartService.modificarCantidad(this.product()!.id, cartService.items().find(i => i.producto.id === this.product()!.id)!.cantidad - 1)"
+                    class="px-4 py-2 bg-zinc-700 text-white rounded-xl hover:bg-zinc-600 text-xl font-bold">-</button>
+                <span class="text-xl font-semibold text-zinc-100">
+                    {{ cartService.items().find(i => i.producto.id === this.product()!.id)!.cantidad }}
+                </span>
+                <button
+                    (click)="cartService.modificarCantidad(this.product()!.id, cartService.items().find(i => i.producto.id === this.product()!.id)!.cantidad + 1)"
+                    class="px-4 py-2 bg-zinc-700 text-white rounded-xl hover:bg-zinc-600 text-xl font-bold">+</button>
+            </div>
+            } @else {
+            <button (click)="cartService.agregar(this.product()!)" [disabled]="(this.product()?.stock ?? 0) === 0"
+                class="w-full py-3 bg-white text-black rounded-xl font-semibold hover:bg-zinc-300 disabled:opacity-50 disabled:cursor-not-allowed mt-2">
+                Agregar al carrito
+            </button>
+            }
+
+        </div>
+    </div>
+</div>
 }
