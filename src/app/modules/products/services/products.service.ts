@@ -23,4 +23,16 @@ export class ProductService {
   getProductBySlug(slug: string): Observable<Producto> {
     return this.http.get<Producto>(`${environment.apiUrl}/productos/${slug}`);
   }
+  
+  crearProducto(producto: Partial<Producto>): Observable<Producto> {
+    return this.http.post<Producto>(`${environment.apiUrl}/productos`, producto);
+  }
+
+ actualizarProducto(id: number, datosNuevos: Partial<Producto>): Observable<Producto> {
+    return this.http.put<Producto>(`${environment.apiUrl}/productos/${id}`, datosNuevos);
+  }
+
+  eliminarProducto(id: number): Observable<void> {
+    return this.http.delete<void>(`${environment.apiUrl}/productos/${id}`);
+  }
 }
