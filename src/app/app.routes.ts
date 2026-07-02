@@ -6,20 +6,20 @@ import { adminGuard } from './core/guards/admin.guards';
 
 export const routes: Routes = [
 
-  { 
-    path: 'admin/products', 
+  {
+    path: 'admin/products',
     component: ProductAdminPage,
-    canActivate: [adminGuard] 
+    canActivate: [adminGuard]
   },
-  { 
-    path: 'admin/products/new', 
+  {
+    path: 'admin/products/new',
     component: ProductFormPage,
-    canActivate: [adminGuard]  
+    canActivate: [adminGuard]
   },
-  { 
-    path: 'admin/products/edit/:id', 
+  {
+    path: 'admin/products/edit/:id',
     component: ProductFormPage,
-    canActivate: [adminGuard]  
+    canActivate: [adminGuard]
   },
 
   {
