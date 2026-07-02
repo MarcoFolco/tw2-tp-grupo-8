@@ -1,0 +1,48 @@
+<div class="p-8 max-w-2xl mx-auto bg-white text-black mt-10 rounded-lg shadow-xl">
+  
+  <div class="flex justify-between items-center border-b pb-4 mb-6">
+    <h1 class="text-2xl font-bold">
+      @if(idEditando()) { Editar Producto } @else { Crear Nuevo Producto }
+    </h1>
+    <a routerLink="/admin/products" class="text-blue-500 hover:underline">Volver</a>
+  </div>
+
+  <form (ngSubmit)="guardar()" class="flex flex-col gap-4">
+    
+    <div>
+      <label class="font-bold mb-1 block">Nombre del Producto</label>
+      <input type="text" [(ngModel)]="productoForm.nombre" name="nombre" class="w-full border p-2 rounded bg-gray-50" required>
+    </div>
+
+    <div>
+      <label class="font-bold mb-1 block">Slug (URL amigable, ej: iphone-15)</label>
+      <input type="text" [(ngModel)]="productoForm.slug" name="slug" class="w-full border p-2 rounded bg-gray-50" required>
+    </div>
+
+    <div>
+      <label class="font-bold mb-1 block">Descripción</label>
+      <textarea [(ngModel)]="productoForm.descripcion" name="descripcion" class="w-full border p-2 rounded bg-gray-50"></textarea>
+    </div>
+
+    <div class="flex gap-4">
+      <div class="flex-1">
+        <label class="font-bold mb-1 block">Precio ($)</label>
+        <input type="number" [(ngModel)]="productoForm.precio" name="precio" class="w-full border p-2 rounded bg-gray-50" required>
+      </div>
+      <div class="flex-1">
+        <label class="font-bold mb-1 block">Stock</label>
+        <input type="number" [(ngModel)]="productoForm.stock" name="stock" class="w-full border p-2 rounded bg-gray-50" required>
+      </div>
+    </div>
+
+    <div>
+      <label class="font-bold mb-1 block">URL de la Imagen</label>
+      <input type="text" [(ngModel)]="productoForm.imagenUrl" name="imagenUrl" class="w-full border p-2 rounded bg-gray-50">
+    </div>
+
+    <button type="submit" class="mt-4 bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-4 rounded shadow text-lg">
+      Guardar Producto
+    </button>
+    
+  </form>
+</div>

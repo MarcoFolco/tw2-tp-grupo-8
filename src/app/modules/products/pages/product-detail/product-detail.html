@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 @if(this.error()){
 <app-product-not-found [error]="this.error()"></app-product-not-found>
 } @else if (this.loading()) {
@@ -67,3 +68,84 @@
     </div>
 </div>
 }
+=======
+<div class="surface-ground min-h-screen px-4 py-6 flex align-items-center justify-content-center">
+  
+  @if (error()) {
+    <app-product-not-found [error]="error()"></app-product-not-found>
+  } @else if (loading()) {
+    <div class="flex justify-content-center align-items-center py-8">
+      <p-progress-spinner />
+    </div>
+  } @else if (product(); as prod) {
+    <p-card class="w-full max-w-5xl shadow-3">
+      
+      <div class="grid">
+        <!-- Columna Izquierda: Imagen del producto -->
+        <div class="col-12 md:col-6 flex justify-content-center align-items-center p-4">
+         <img 
+             [src]="prod.imagenUrl" 
+             onerror="this.src='https://primefaces.org/cdn/primeng/images/card-ng.jpg'" 
+             [alt]="prod.nombre" 
+             class="w-full border-round shadow-2 max-w-28rem object-cover aspect-square"
+             />
+        </div>
+
+        <!-- Columna Derecha: Detalles del producto -->
+        <div class="col-12 md:col-6 flex flex-column gap-3 p-4 justify-content-center">
+          
+          <!-- Botón Volver -->
+          <a routerLink="/products" class="text-primary no-underline font-medium flex align-items-center gap-2 mb-2 hover:underline">
+            <i class="pi pi-arrow-left"></i> Volver a productos
+          </a>
+
+          <!-- Categoría -->
+          <span class="text-sm text-color-secondary uppercase font-semibold tracking-wider">
+            {{ prod.categoria.nombre }}
+          </span>
+
+          <!-- Título del producto -->
+          <h1 class="text-3xl md:text-4xl font-bold m-0 text-zinc-100">
+            {{ prod.nombre }}
+          </h1>
+
+          <!-- Estado de Stock -->
+          @if (stockStatus(); as status) {
+            <div class="flex align-items-center gap-2">
+              <span [ngClass]="status.classStyle" class="text-white text-xs font-semibold px-3 py-1 border-round flex align-items-center gap-1">
+                <i [ngClass]="status.icon"></i>
+                {{ status.label }}
+              </span>
+              <span class="text-sm text-color-secondary">
+                ({{ prod.stock }} unidades disponibles)
+              </span>
+            </div>
+          }
+
+          <!-- Descripción -->
+          <p class="text-color-secondary m-0 line-height-3 text-lg">
+            {{ prod.descripcion }}
+          </p>
+
+          <!-- Precio -->
+          <div class="text-3xl font-bold text-primary mt-2">
+            {{ prod.precio | currency:'$ ':'symbol':'1.0-0' }}
+          </div>
+
+          <!-- Botón de acción -->
+          <p-button
+            label="Agregar al carrito"
+            icon="pi pi-shopping-cart"
+            styleClass="w-full mt-4 p-button-lg"
+            [disabled]="prod.stock === 0"
+            (onClick)="agregarAlCarrito()"
+          />
+
+        </div>
+      </div>
+
+    </p-card>
+  }
+
+</div>
+>>>>>>> b6c5a7f926770cd859799b0ed006eba519e88c7a

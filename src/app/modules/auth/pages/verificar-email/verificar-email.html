@@ -1,0 +1,57 @@
+<div class="flex align-items-center justify-content-center min-h-screen surface-ground px-4">
+  <p-card class="w-full md:w-5 lg:w-4 text-center">
+
+    @switch (estado()) {
+      @case ('cargando') {
+        <div class="flex flex-column align-items-center gap-3">
+          <p-progress-spinner strokeWidth="4" style="width: 3rem; height: 3rem" />
+          <p class="text-color-secondary m-0">Verificando tu email...</p>
+        </div>
+      }
+      @case ('ok') {
+        <div class="flex flex-column align-items-center gap-4">
+          <i class="pi pi-check-circle text-green-500" style="font-size: 3rem"></i>
+          <h2 class="m-0">¡Email verificado!</h2>
+          <p class="text-color-secondary m-0">Tu cuenta está activa. Ya podés iniciar sesión.</p>
+          <p-button
+            label="Iniciar sesión"
+            icon="pi pi-sign-in"
+            [routerLink]="'/auth/login'"
+            styleClass="w-full"
+          />
+        </div>
+      }
+      @case ('expirado') {
+        <div class="flex flex-column align-items-center gap-4">
+          <i class="pi pi-clock text-orange-400" style="font-size: 3rem"></i>
+          <h2 class="m-0">El link expiró</h2>
+          <p class="text-color-secondary m-0">
+            El link de verificación tiene 24 horas de validez. Podés pedir uno nuevo desde la pantalla de login.
+          </p>
+          <p-button
+            label="Ir al login"
+            severity="secondary"
+            [routerLink]="'/auth/login'"
+            styleClass="w-full"
+          />
+        </div>
+      }
+      @case ('invalido') {
+        <div class="flex flex-column align-items-center gap-4">
+          <i class="pi pi-times-circle text-red-400" style="font-size: 3rem"></i>
+          <h2 class="m-0">Link inválido</h2>
+          <p class="text-color-secondary m-0">
+            Este link no es válido o ya fue usado. Si tu cuenta sigue sin verificarse, pedí un nuevo link desde el login.
+          </p>
+          <p-button
+            label="Ir al login"
+            severity="secondary"
+            [routerLink]="'/auth/login'"
+            styleClass="w-full"
+          />
+        </div>
+      }
+    }
+
+  </p-card>
+</div>
