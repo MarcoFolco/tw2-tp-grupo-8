@@ -5,7 +5,7 @@
   </div>
 
   @if (producto()) {
-    <app-product-form [producto]="producto()" (formSubmit)="actualizarProducto($event)" />
+    <app-product-form [producto]="producto()" [categorias]="categorias()" (formSubmit)="actualizarProducto($event)" />
   } @else {
     <p class="text-gray-500">Cargando producto...</p>
   }

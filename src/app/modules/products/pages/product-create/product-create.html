@@ -4,5 +4,5 @@
     <p-button routerLink="/products/admin" label="Volver" icon="pi pi-arrow-left" severity="primary" />
   </div>
 
-  <app-product-form (formSubmit)="crearProducto($event)" />
+  <app-product-form [categorias]="categorias()" (formSubmit)="crearProducto($event)" />
 </div>

@@ -1,7 +1,5 @@
-import { Component, DestroyRef, inject, input, OnInit, output } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Component, inject, input, OnInit, output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CategoriesService } from '../../services/categories.service';
 import { Categoria } from '../../interfaces/categoria.interface';
 import { Producto } from '../../interfaces/producto.interface';
 import { Select } from 'primeng/select';
@@ -25,14 +23,12 @@ export type ProductoFormData = {
 })
 export class ProductFormComponent implements OnInit {
   private fb = inject(FormBuilder);
-  private categoriesService = inject(CategoriesService);
-  private destroyRef = inject(DestroyRef);
 
   producto = input<Producto | undefined>(undefined);
+  categorias = input<Categoria[]>([]);
   formSubmit = output<ProductoFormData>();
 
   form!: FormGroup;
-  categorias: Categoria[] = [];
 
   ngOnInit() {
     const p = this.producto();
@@ -45,12 +41,6 @@ export class ProductFormComponent implements OnInit {
       imagenUrl: [p?.imagenUrl ?? ''],
       categoriaId: [p?.categoria?.id ?? null, Validators.required],
     });
-
-    this.categoriesService.getCategorias()
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe({
-        next: (cats) => this.categorias = cats,
-      });
   }
 
   enviar() {
