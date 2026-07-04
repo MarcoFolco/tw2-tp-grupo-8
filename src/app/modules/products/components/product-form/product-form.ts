@@ -10,7 +10,6 @@ import { Button } from 'primeng/button';
 
 export type ProductoFormData = {
   nombre: string;
-  slug: string;
   descripcion: string;
   precio: number;
   stock: number;
@@ -40,10 +39,9 @@ export class ProductFormComponent implements OnInit {
 
     this.form = this.fb.group({
       nombre: [p?.nombre ?? '', Validators.required],
-      slug: [p?.slug ?? '', Validators.required],
       descripcion: [p?.descripcion ?? ''],
-      precio: [p?.precio ?? 0, [Validators.required, Validators.min(0)]],
-      stock: [p?.stock ?? 0, [Validators.required, Validators.min(0)]],
+      precio: [p?.precio ?? null, [Validators.required, Validators.min(0.01)]],
+      stock: [p?.stock ?? null, [Validators.required, Validators.min(0)]],
       imagenUrl: [p?.imagenUrl ?? ''],
       categoriaId: [p?.categoria?.id ?? null, Validators.required],
     });

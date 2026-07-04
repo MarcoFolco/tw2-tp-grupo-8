@@ -1,44 +1,50 @@
 <form [formGroup]="form" (ngSubmit)="enviar()" class="flex flex-col gap-4">
 
   <div class="flex flex-col gap-1">
-    <label class="font-bold">Nombre</label>
-    <input pInputText formControlName="nombre" />
+    <label class="font-bold">Nombre <span class="text-red-500">*</span></label>
+    <input pInputText formControlName="nombre" placeholder="Ej: iPhone 15 Pro" />
     @if (form.get('nombre')?.hasError('required') && form.get('nombre')?.touched) {
       <span class="text-red-500 text-sm">El nombre es requerido</span>
     }
   </div>
 
   <div class="flex flex-col gap-1">
-    <label class="font-bold">Slug (URL amigable, ej: iphone-15)</label>
-    <input pInputText formControlName="slug" />
-    @if (form.get('slug')?.hasError('required') && form.get('slug')?.touched) {
-      <span class="text-red-500 text-sm">El slug es requerido</span>
-    }
-  </div>
-
-  <div class="flex flex-col gap-1">
     <label class="font-bold">Descripción</label>
-    <textarea pInputText formControlName="descripcion" rows="3" class="w-full border p-2 rounded"></textarea>
+    <textarea formControlName="descripcion" rows="3"
+              class="w-full border border-gray-300 rounded p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+              placeholder="Descripción del producto..."></textarea>
   </div>
 
   <div class="flex gap-4">
     <div class="flex flex-col gap-1 flex-1">
-      <label class="font-bold">Precio ($)</label>
-      <input pInputText type="number" formControlName="precio" />
+      <label class="font-bold">Precio ($) <span class="text-red-500">*</span></label>
+      <input pInputText type="number" formControlName="precio" placeholder="0.00" min="0.01" step="0.01" />
+      @if (form.get('precio')?.hasError('required') && form.get('precio')?.touched) {
+        <span class="text-red-500 text-sm">El precio es requerido</span>
+      }
+      @if (form.get('precio')?.hasError('min') && form.get('precio')?.touched) {
+        <span class="text-red-500 text-sm">El precio debe ser mayor a 0</span>
+      }
     </div>
     <div class="flex flex-col gap-1 flex-1">
-      <label class="font-bold">Stock</label>
-      <input pInputText type="number" formControlName="stock" />
+      <label class="font-bold">Stock <span class="text-red-500">*</span></label>
+      <input pInputText type="number" formControlName="stock" placeholder="0" min="0" />
+      @if (form.get('stock')?.hasError('required') && form.get('stock')?.touched) {
+        <span class="text-red-500 text-sm">El stock es requerido</span>
+      }
+      @if (form.get('stock')?.hasError('min') && form.get('stock')?.touched) {
+        <span class="text-red-500 text-sm">El stock no puede ser negativo</span>
+      }
     </div>
   </div>
 
   <div class="flex flex-col gap-1">
     <label class="font-bold">URL de la imagen</label>
-    <input pInputText formControlName="imagenUrl" />
+    <input pInputText formControlName="imagenUrl" placeholder="https://..." />
   </div>
 
   <div class="flex flex-col gap-1">
-    <label class="font-bold">Categoría</label>
+    <label class="font-bold">Categoría <span class="text-red-500">*</span></label>
     <p-select
       [options]="categorias"
       formControlName="categoriaId"

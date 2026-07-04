@@ -2,7 +2,7 @@
   <div class="flex justify-between items-center mb-6">
     <h1 class="text-3xl font-bold">Panel de Control: Productos</h1>
     
-    <button routerLink="/admin/products/new" class="bg-green-600 hover:bg-green-500 text-white font-bold py-2 px-4 rounded shadow">
+    <button routerLink="/products/admin/new" class="bg-green-600 hover:bg-green-500 text-white font-bold py-2 px-4 rounded shadow">
       + Nuevo Producto
     </button>
   </div>
@@ -32,7 +32,7 @@
               </span>
             </td>
             <td class="p-3 flex justify-center gap-2">
-                      <button [routerLink]="['/admin/products/edit', prod.slug]" class="bg-blue-500 hover:bg-blue-400 text-white px-3 py-1 rounded text-sm">
+                      <button [routerLink]="['/products/admin/edit', prod.slug]" class="bg-blue-500 hover:bg-blue-400 text-white px-3 py-1 rounded text-sm">
       Editar
     </button>
               <button (click)="borrarProducto(prod.id)" class="bg-red-500 hover:bg-red-400 text-white px-3 py-1 rounded text-sm">
