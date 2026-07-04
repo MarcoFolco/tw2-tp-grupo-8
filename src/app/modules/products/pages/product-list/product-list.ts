@@ -23,7 +23,7 @@ export class ProductListPage {
   }
 
   buscarProductosPorNombre(value: string) {
-    console.log(value);
+    this.productsService.buscarProductosPorNombre(value);
   }
 
   loadProducts(categoria?: string) {
