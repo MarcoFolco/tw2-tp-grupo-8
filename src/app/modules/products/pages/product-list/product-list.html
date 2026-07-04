@@ -1,48 +1,41 @@
 <div class="p-5 flex justify-center">
-  @if (loading()) {
-    <div class="card flex justify-center">
-      <p-progress-spinner
-        strokeWidth="8"
-        fill="transparent"
-        animationDuration=".5s"
-        [style]="{ width: '50px', height: '50px' }"
+  <div class="flex flex-col items-center w-full max-w-6xl gap-5 mx-auto">
+
+    <div class="flex gap-4 w-full max-w-2xl items-center">
+      <div class="flex-1">
+        <app-search-bar (searchChanged)="nombre.set($event)" />
+      </div>
+      <p-select
+        [ngModel]="categoriaId()"
+        (ngModelChange)="categoriaId.set($event)"
+        [options]="categorias()"
+        optionLabel="nombre"
+        optionValue="id"
+        placeholder="Todas las categorías"
+        [showClear]="true"
       />
     </div>
-  } @else {
-    <div class="flex flex-col items-center w-full max-w-6xl gap-5 mx-auto">
-      <app-search-bar (searchChanged)="buscarProductosPorNombre($event)" />
-      <div class="flex gap-3 w-full max-w-100 justify-center my-2">
-        <button
-          (click)="loadProducts()"
-          class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-600 cursor-pointer"
-        >
-          Todos
-        </button>
 
-        <button
-          (click)="loadProducts(1)"
-          class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-500 cursor-pointer"
-        >
-          Notebooks
-        </button>
-
-        <button
-          (click)="loadProducts(2)"
-          class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-500 cursor-pointer"
-        >
-          Smartphones
-        </button>
+    @if (loading()) {
+      <div class="flex justify-center py-10">
+        <p-progress-spinner
+          strokeWidth="8"
+          fill="transparent"
+          animationDuration=".5s"
+          [style]="{ width: '50px', height: '50px' }"
+        />
       </div>
-
+    } @else {
       <div class="w-full flex gap-6 flex-wrap justify-center items-center pb-16">
         @if (products().length > 0) {
-          @for (product of products(); track $index) {
-            <app-product-card [producto]="product"></app-product-card>
+          @for (product of products(); track product.id) {
+            <app-product-card [producto]="product" />
           }
         } @else {
-          <p>No se encontraron productos.</p>
+          <p class="text-zinc-400">No se encontraron productos.</p>
         }
       </div>
-    </div>
-  }
+    }
+
+  </div>
 </div>

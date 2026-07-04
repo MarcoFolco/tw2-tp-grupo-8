@@ -6,24 +6,13 @@ import { environment } from '../../../../environments/environment.development';
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
-
   private readonly http = inject(HttpClient);
 
-  getProducts(categoria?: number): Observable<Producto[]> {
-
+  getProducts(filters: { nombre?: string; categoriaId?: number } = {}): Observable<Producto[]> {
     let params = new HttpParams();
-
-    if (categoria) {
-      params = params.set('categoria', categoria);
-    }
-
+    if (filters.nombre) params = params.set('nombre', filters.nombre);
+    if (filters.categoriaId) params = params.set('categoria', filters.categoriaId);
     return this.http.get<Producto[]>(`${environment.apiUrl}/productos`, { params });
-  }
-
-  buscarProductosPorNombre(nombre: string): Observable<Producto[]> {
-    return this.http.get<Producto[]>(`${environment.apiUrl}/productos`, {
-      params: { nombre: nombre }
-    });
   }
 
   getProductBySlug(slug: string): Observable<Producto> {
