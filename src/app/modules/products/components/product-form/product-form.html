@@ -1,0 +1,64 @@
+<form [formGroup]="form" (ngSubmit)="enviar()" class="flex flex-col gap-4">
+
+  <div class="flex flex-col gap-1">
+    <label class="font-bold">Nombre</label>
+    <input pInputText formControlName="nombre" />
+    @if (form.get('nombre')?.hasError('required') && form.get('nombre')?.touched) {
+      <span class="text-red-500 text-sm">El nombre es requerido</span>
+    }
+  </div>
+
+  <div class="flex flex-col gap-1">
+    <label class="font-bold">Slug (URL amigable, ej: iphone-15)</label>
+    <input pInputText formControlName="slug" />
+    @if (form.get('slug')?.hasError('required') && form.get('slug')?.touched) {
+      <span class="text-red-500 text-sm">El slug es requerido</span>
+    }
+  </div>
+
+  <div class="flex flex-col gap-1">
+    <label class="font-bold">Descripción</label>
+    <textarea pInputText formControlName="descripcion" rows="3" class="w-full border p-2 rounded"></textarea>
+  </div>
+
+  <div class="flex gap-4">
+    <div class="flex flex-col gap-1 flex-1">
+      <label class="font-bold">Precio ($)</label>
+      <input pInputText type="number" formControlName="precio" />
+    </div>
+    <div class="flex flex-col gap-1 flex-1">
+      <label class="font-bold">Stock</label>
+      <input pInputText type="number" formControlName="stock" />
+    </div>
+  </div>
+
+  <div class="flex flex-col gap-1">
+    <label class="font-bold">URL de la imagen</label>
+    <input pInputText formControlName="imagenUrl" />
+  </div>
+
+  <div class="flex flex-col gap-1">
+    <label class="font-bold">Categoría</label>
+    <p-select
+      [options]="categorias"
+      formControlName="categoriaId"
+      optionLabel="nombre"
+      optionValue="id"
+      placeholder="Seleccioná una categoría"
+      appendTo="body"
+      class="w-full"
+    />
+    @if (form.get('categoriaId')?.hasError('required') && form.get('categoriaId')?.touched) {
+      <span class="text-red-500 text-sm">La categoría es requerida</span>
+    }
+  </div>
+
+  <p-button
+    type="submit"
+    [label]="producto() ? 'Actualizar Producto' : 'Crear Producto'"
+    [disabled]="form.invalid"
+    severity="success"
+    class="mt-2"
+  />
+
+</form>
