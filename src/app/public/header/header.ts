@@ -26,6 +26,7 @@ export class HeaderComponent {
         label: 'Productos',
         icon: 'pi pi-shopping-bag',
         routerLink: '/products',
+        routerLinkActiveOptions: { exact: true },
       },
       ...(loggedIn
         ? [
@@ -34,7 +35,7 @@ export class HeaderComponent {
             icon: 'pi pi-shopping-cart',
             routerLink: '/cart',
             badge: count > 0 ? count.toString() : undefined,
-            badgeStyleClass: 'p-badge-danger'
+            badgeStyleClass: 'p-badge-danger',
           },
           { label: 'Mis Pedidos', icon: 'pi pi-list', routerLink: '/orders' },
           ...(isAdmin
