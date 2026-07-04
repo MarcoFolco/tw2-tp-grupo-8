@@ -13,20 +13,26 @@ import { SearchBarComponent } from "../../components/search-bar/search-bar.compo
 })
 export class ProductListPage {
   private readonly productsService = inject(ProductService);
+
   products = signal<Producto[]>([]);
   loading = signal(true);
   error = signal<string | null>(null);
-  searchText = signal('');
 
   constructor() {
     this.loadProducts();
   }
 
   buscarProductosPorNombre(value: string) {
-    this.productsService.buscarProductosPorNombre(value);
+    this.productsService.buscarProductosPorNombre(value).
+      subscribe({
+        next: (productos) => {
+          console.log(productos); 
+          this.products.set(productos);
+        }
+      });
   }
 
-  loadProducts(categoria?: string) {
+  loadProducts(categoria?: number) {
     this.loading.set(true);
     this.error.set(null);
 
@@ -40,16 +46,5 @@ export class ProductListPage {
         this.loading.set(false);
       }
     });
-  }
-
-  filterProducts = computed(() => {
-    const query = this.searchText().toLowerCase().trim();
-    if (!query) return this.products();
-    return this.products().filter(p => p.nombre.toLowerCase().includes(query))
-  })
-
-  updateText(event: Event): void {
-    const text = event.target as HTMLInputElement;
-    this.searchText.set(text.value);
   }
 }

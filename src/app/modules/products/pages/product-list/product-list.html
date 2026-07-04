@@ -20,14 +20,14 @@
         </button>
 
         <button
-          (click)="loadProducts('Notebooks')"
+          (click)="loadProducts(1)"
           class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-500 cursor-pointer"
         >
           Notebooks
         </button>
 
         <button
-          (click)="loadProducts('Smartphones')"
+          (click)="loadProducts(2)"
           class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-500 cursor-pointer"
         >
           Smartphones
@@ -35,8 +35,8 @@
       </div>
 
       <div class="w-full flex gap-6 flex-wrap justify-center items-center pb-16">
-        @if (filterProducts().length > 0) {
-          @for (product of filterProducts(); track $index) {
+        @if (products().length > 0) {
+          @for (product of products(); track $index) {
             <app-product-card [producto]="product"></app-product-card>
           }
         } @else {

@@ -9,7 +9,7 @@ export class ProductService {
 
   private readonly http = inject(HttpClient);
 
-  getProducts(categoria?: string): Observable<Producto[]> {
+  getProducts(categoria?: number): Observable<Producto[]> {
 
     let params = new HttpParams();
 
