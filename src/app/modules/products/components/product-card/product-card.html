@@ -2,7 +2,8 @@
     class="bg-black rounded-xl border border-white overflow-hidden transition-all w-full max-w-70 hover:bg-zinc-800 hover:-translate-y-1">
     @if (stockStatus(); as status) {
     <div class="w-full relative">
-        <img alt="Card" class="w-full" src="https://primefaces.org/cdn/primeng/images/card-ng.jpg" />
+        <img [src]="producto().imagenUrl" onerror="this.src='https://primefaces.org/cdn/primeng/images/card-ng.jpg'"
+            [alt]="producto().nombre" class="w-full object-cover aspect-square" />
         <div [ngClass]="status.classStyle"
             class="flex items-center justify-center px-2 py-1 rounded-2xl gap-1 absolute top-2 right-2">
             <i [ngClass]="status.icon"></i>
