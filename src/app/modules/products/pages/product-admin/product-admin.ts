@@ -4,11 +4,14 @@ import { ProductService } from '../../services/products.service';
 import { CurrencyPipe } from '@angular/common';
 import { Producto } from '../../interfaces/producto.interface';
 import { RouterLink } from '@angular/router';
+import { TableModule } from 'primeng/table';
+import { Button } from 'primeng/button';
+import { Tag } from 'primeng/tag';
 
 @Component({
   selector: 'app-product-admin',
   standalone: true,
-  imports: [CurrencyPipe, RouterLink],
+  imports: [CurrencyPipe, RouterLink, TableModule, Button, Tag],
   templateUrl: './product-admin.html',
 })
 export class ProductAdminPage implements OnInit {
