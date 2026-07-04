@@ -7,6 +7,7 @@ import { Button } from 'primeng/button';
 import { CardStock } from '../../interfaces/stock.interface';
 import { CartService } from '../../../cart/services/cart.service';
 import { AuthService } from '../../../auth/services/auth.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-product-card',
@@ -20,6 +21,7 @@ export class ProductCardComponent {
   private cartService = inject(CartService);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private messageService = inject(MessageService);
 
   readonly stockStatus = computed<CardStock>(() => {
     const stock = this.producto().stock;
@@ -34,5 +36,11 @@ export class ProductCardComponent {
       return;
     }
     this.cartService.agregar(this.producto());
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Agregado al carrito',
+      detail: this.producto().nombre,
+      life: 3000,
+    });
   }
 }

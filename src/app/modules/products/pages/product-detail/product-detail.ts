@@ -11,6 +11,7 @@ import { Button } from 'primeng/button';
 import { CurrencyPipe, NgClass } from '@angular/common';
 import { CartService } from '../../../cart/services/cart.service';
 import { AuthService } from '../../../auth/services/auth.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-product-detail-page',
@@ -25,6 +26,7 @@ export class ProductDetailPage implements OnInit {
   readonly cartService = inject(CartService);
   private authService = inject(AuthService);
   private router = inject(Router);
+  private messageService = inject(MessageService);
 
   readonly product = signal<Producto | null>(null);
   readonly error = signal<HttpErrorResponse | null>(null);
@@ -75,5 +77,11 @@ export class ProductDetailPage implements OnInit {
       return;
     }
     this.cartService.agregar(prod);
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Agregado al carrito',
+      detail: prod.nombre,
+      life: 3000,
+    });
   }
 }
