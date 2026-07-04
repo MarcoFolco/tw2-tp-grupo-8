@@ -1,5 +1,5 @@
 import { Component, inject, computed } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Menubar } from 'primeng/menubar';
 import { Button } from 'primeng/button';
 import { MenuItem } from 'primeng/api';
@@ -9,7 +9,7 @@ import { CartService } from '../../modules/cart/services/cart.service';
 @Component({
   selector: 'app-header',
   templateUrl: './header.html',
-  imports: [Menubar, Button],
+  imports: [Menubar, Button, RouterLink],
 })
 export class HeaderComponent {
   authService = inject(AuthService);

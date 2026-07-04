@@ -14,19 +14,14 @@ import { AuthService } from '../../../auth/services/auth.service';
 @Component({
   selector: 'app-product-detail-page',
   templateUrl: './product-detail.html',
-  imports: [ProgressSpinnerModule,
-    ProductNotFound,
-    Card,
-    Button,
-    RouterLink,
-    CurrencyPipe,
-    NgClass],
+  standalone: true,
+  imports: [ProgressSpinnerModule, ProductNotFound, Card, Button, RouterLink, CurrencyPipe, NgClass],
 })
 export class ProductDetailPage implements OnInit {
 
   private activatedRoute = inject(ActivatedRoute);
   private productService = inject(ProductService);
-  private cartService = inject(CartService);
+  readonly cartService = inject(CartService);
   private authService = inject(AuthService);
   private router = inject(Router);
 
@@ -34,23 +29,14 @@ export class ProductDetailPage implements OnInit {
   readonly error = signal<HttpErrorResponse | null>(null);
   readonly loading = signal<boolean>(false);
 
-
-
-  // Señal computada para calcular la etiqueta y los estilos del stock
   readonly stockStatus = computed(() => {
     const prod = this.product();
     if (!prod) return null;
-
     const stock = prod.stock;
-    if (stock > 10) {
-      return { classStyle: 'bg-green-700', icon: 'pi pi-check', label: 'Disponible' };
-    }
-    if (stock > 0) {
-      return { classStyle: 'bg-yellow-500', icon: 'pi pi-clock', label: 'Últimas unidades' };
-    }
+    if (stock > 10) return { classStyle: 'bg-green-700', icon: 'pi pi-check', label: 'Disponible' };
+    if (stock > 0) return { classStyle: 'bg-yellow-500', icon: 'pi pi-clock', label: 'Últimas unidades' };
     return { classStyle: 'bg-red-500', icon: 'pi pi-times', label: 'Sin stock' };
   });
-
 
   ngOnInit() {
     this.activatedRoute.params.subscribe((params) => {
@@ -76,19 +62,13 @@ export class ProductDetailPage implements OnInit {
     });
   }
 
-  // Método para agregar el producto al carrito de compras
   agregarAlCarrito(): void {
     const prod = this.product();
     if (!prod) return;
-
-    // Si el usuario no está logueado, lo mandamos al login
     if (!this.authService.isLoggedIn()) {
       void this.router.navigate(['/auth/login']);
       return;
     }
-
-    // Si está logueado, lo agregamos al carrito
     this.cartService.agregar(prod);
   }
-
 }

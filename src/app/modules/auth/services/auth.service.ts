@@ -91,6 +91,7 @@ export class AuthService {
         nombre: payload['nombre'] as string,
         apellido: payload['apellido'] as string,
         direccion: payload['direccion'] as string,
+        rol: payload['rol'] as string,
       };
     } catch {
       return null;
