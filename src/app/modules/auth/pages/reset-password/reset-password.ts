@@ -1,4 +1,5 @@
-import { Component, OnInit, signal, inject } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import {
   AbstractControl,
@@ -25,6 +26,7 @@ export class ResetPasswordPage implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private fb = inject(FormBuilder);
+  private destroyRef = inject(DestroyRef);
 
   private token = '';
 
@@ -65,20 +67,22 @@ export class ResetPasswordPage implements OnInit {
     if (this.form.invalid) return;
 
     this.loading.set(true);
-    this.authService.resetPassword(this.token, this.form.value.password!).subscribe({
-      next: () => {
-        this.estado.set('exito');
-        this.loading.set(false);
-      },
-      error: (err: HttpErrorResponse) => {
-        if (err.status === 410) {
-          this.estado.set('expirado');
-        } else {
-          this.estado.set('invalido');
-        }
-        this.loading.set(false);
-      },
-    });
+    this.authService.resetPassword(this.token, this.form.value.password!)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.estado.set('exito');
+          this.loading.set(false);
+        },
+        error: (err: HttpErrorResponse) => {
+          if (err.status === 410) {
+            this.estado.set('expirado');
+          } else {
+            this.estado.set('invalido');
+          }
+          this.loading.set(false);
+        },
+      });
   }
 
   private passwordComplexityValidator(): ValidatorFn {

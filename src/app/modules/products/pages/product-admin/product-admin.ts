@@ -1,5 +1,5 @@
-
-import { Component, inject, signal, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ProductService } from '../../services/products.service';
 import { CurrencyPipe } from '@angular/common';
 import { Producto } from '../../interfaces/producto.interface';
@@ -13,8 +13,8 @@ import { RouterLink } from '@angular/router';
 })
 export class ProductAdminPage implements OnInit {
   private readonly productService = inject(ProductService);
+  private readonly destroyRef = inject(DestroyRef);
 
-  // Aquí guardaremos la lista de productos
   productos = signal<Producto[]>([]);
 
   ngOnInit() {
@@ -22,21 +22,25 @@ export class ProductAdminPage implements OnInit {
   }
 
   cargarProductos() {
-    this.productService.getProducts().subscribe({
-      next: (datos) => this.productos.set(datos),
-      error: (err) => console.error(err)
-    });
+    this.productService.getProducts()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (datos) => this.productos.set(datos),
+        error: (err) => console.error(err),
+      });
   }
 
   borrarProducto(id: number) {
-    if (confirm("¿Estás seguro de que quieres eliminar este producto?")) {
-      this.productService.eliminarProducto(id).subscribe({
-        next: () => {
-          alert("Producto eliminado con éxito");
-          this.productos.set(this.productos().filter(p => p.id !== id));
-        },
-        error: () => alert("Hubo un error al borrar el producto")
-      });
+    if (confirm('¿Estás seguro de que quieres eliminar este producto?')) {
+      this.productService.eliminarProducto(id)
+        .pipe(takeUntilDestroyed(this.destroyRef))
+        .subscribe({
+          next: () => {
+            alert('Producto eliminado con éxito');
+            this.productos.set(this.productos().filter(p => p.id !== id));
+          },
+          error: () => alert('Hubo un error al borrar el producto'),
+        });
     }
   }
 }

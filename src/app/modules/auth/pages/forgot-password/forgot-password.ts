@@ -1,4 +1,5 @@
-import { Component, signal, inject } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Card } from 'primeng/card';
@@ -14,6 +15,7 @@ import { AuthService } from '../../services/auth.service';
 export class ForgotPasswordPage {
   private authService = inject(AuthService);
   private fb = inject(FormBuilder);
+  private destroyRef = inject(DestroyRef);
 
   form = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -26,15 +28,17 @@ export class ForgotPasswordPage {
     if (this.form.invalid) return;
 
     this.loading.set(true);
-    this.authService.requestPasswordReset(this.form.value.email!).subscribe({
-      next: () => {
-        this.enviado.set(true);
-        this.loading.set(false);
-      },
-      error: () => {
-        this.enviado.set(true);
-        this.loading.set(false);
-      },
-    });
+    this.authService.requestPasswordReset(this.form.value.email!)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.enviado.set(true);
+          this.loading.set(false);
+        },
+        error: () => {
+          this.enviado.set(true);
+          this.loading.set(false);
+        },
+      });
   }
 }

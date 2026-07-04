@@ -1,4 +1,5 @@
-import { Component, signal, inject } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router, RouterLink } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -18,6 +19,7 @@ export class LoginPage {
   private authService = inject(AuthService);
   private router = inject(Router);
   private fb = inject(FormBuilder);
+  private destroyRef = inject(DestroyRef);
 
   loginForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -39,17 +41,19 @@ export class LoginPage {
     this.emailNoVerificado.set(false);
     this.resendSent.set(false);
 
-    this.authService.login(email!, password!).subscribe({
-      next: () => void this.router.navigate(['/products']),
-      error: (err: HttpErrorResponse) => {
-        if (err.status === 403 && err.error?.error === 'EMAIL_NO_VERIFICADO') {
-          this.emailNoVerificado.set(true);
-        } else {
-          this.errorMessage.set('Email o contraseña incorrectos.');
-        }
-        this.loading.set(false);
-      },
-    });
+    this.authService.login(email!, password!)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => void this.router.navigate(['/products']),
+        error: (err: HttpErrorResponse) => {
+          if (err.status === 403 && err.error?.error === 'EMAIL_NO_VERIFICADO') {
+            this.emailNoVerificado.set(true);
+          } else {
+            this.errorMessage.set('Email o contraseña incorrectos.');
+          }
+          this.loading.set(false);
+        },
+      });
   }
 
   onResendVerification(): void {
@@ -57,15 +61,17 @@ export class LoginPage {
     if (!email) return;
 
     this.resendLoading.set(true);
-    this.authService.resendVerification(email).subscribe({
-      next: () => {
-        this.resendSent.set(true);
-        this.resendLoading.set(false);
-      },
-      error: () => {
-        this.resendSent.set(true);
-        this.resendLoading.set(false);
-      },
-    });
+    this.authService.resendVerification(email)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          this.resendSent.set(true);
+          this.resendLoading.set(false);
+        },
+        error: () => {
+          this.resendSent.set(true);
+          this.resendLoading.set(false);
+        },
+      });
   }
 }

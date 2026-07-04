@@ -1,10 +1,11 @@
-import { Component, inject, OnInit, signal, computed } from '@angular/core';
+import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 import { ProductService } from '../../services/products.service';
 import { Producto } from '../../interfaces/producto.interface';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { HttpErrorResponse } from '@angular/common/http';
-import { ProductNotFound } from "../../components/product-not-found/product-not-found";
+import { ProductNotFound } from '../../components/product-not-found/product-not-found';
 import { Card } from 'primeng/card';
 import { Button } from 'primeng/button';
 import { CurrencyPipe, NgClass } from '@angular/common';
@@ -18,9 +19,9 @@ import { AuthService } from '../../../auth/services/auth.service';
   imports: [ProgressSpinnerModule, ProductNotFound, Card, Button, RouterLink, CurrencyPipe, NgClass],
 })
 export class ProductDetailPage implements OnInit {
-
   private activatedRoute = inject(ActivatedRoute);
   private productService = inject(ProductService);
+  private destroyRef = inject(DestroyRef);
   readonly cartService = inject(CartService);
   private authService = inject(AuthService);
   private router = inject(Router);
@@ -39,27 +40,31 @@ export class ProductDetailPage implements OnInit {
   });
 
   ngOnInit() {
-    this.activatedRoute.params.subscribe((params) => {
-      const slug = params['slug'];
-      if (!slug) return;
-      this.loadProductBySlug(slug);
-    })
+    this.activatedRoute.params
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((params) => {
+        const slug = params['slug'];
+        if (!slug) return;
+        this.loadProductBySlug(slug);
+      });
   }
 
   private loadProductBySlug(slug: string) {
     this.error.set(null);
     this.loading.set(true);
 
-    this.productService.getProductBySlug(slug).subscribe({
-      next: (product) => {
-        this.product.set(product);
-        this.loading.set(false);
-      },
-      error: (error: HttpErrorResponse) => {
-        this.error.set(error);
-        this.loading.set(false);
-      },
-    });
+    this.productService.getProductBySlug(slug)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (product) => {
+          this.product.set(product);
+          this.loading.set(false);
+        },
+        error: (error: HttpErrorResponse) => {
+          this.error.set(error);
+          this.loading.set(false);
+        },
+      });
   }
 
   agregarAlCarrito(): void {

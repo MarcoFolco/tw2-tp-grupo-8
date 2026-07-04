@@ -1,4 +1,5 @@
-import { Component, effect, inject, signal } from '@angular/core';
+import { Component, DestroyRef, effect, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../services/products.service';
 import { CategoriesService } from '../../services/categories.service';
@@ -18,6 +19,7 @@ import { SearchBarComponent } from '../../components/search-bar/search-bar.compo
 export class ProductListPage {
   private readonly productsService = inject(ProductService);
   private readonly categoriesService = inject(CategoriesService);
+  private readonly destroyRef = inject(DestroyRef);
 
   categorias = signal<Categoria[]>([]);
   products = signal<Producto[]>([]);
@@ -28,12 +30,12 @@ export class ProductListPage {
   nombre = signal<string>('');
 
   constructor() {
-    this.categoriesService.getCategorias().subscribe({
-      next: (cats) => this.categorias.set(cats),
-    });
+    this.categoriesService.getCategorias()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (cats) => this.categorias.set(cats),
+      });
 
-    // Se ejecuta cada vez que categoriaId o nombre cambian,
-    // haciendo una sola llamada HTTP con ambos filtros aplicados.
     effect(() => {
       this.cargarProductos(this.categoriaId(), this.nombre());
     });
@@ -46,15 +48,17 @@ export class ProductListPage {
     this.productsService.getProducts({
       categoriaId: categoriaId ?? undefined,
       nombre: nombre || undefined,
-    }).subscribe({
-      next: (products) => {
-        this.products.set(products);
-        this.loading.set(false);
-      },
-      error: (err) => {
-        this.error.set(err.message);
-        this.loading.set(false);
-      },
-    });
+    })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (products) => {
+          this.products.set(products);
+          this.loading.set(false);
+        },
+        error: (err) => {
+          this.error.set(err.message);
+          this.loading.set(false);
+        },
+      });
   }
 }

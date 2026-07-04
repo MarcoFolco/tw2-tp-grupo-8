@@ -1,4 +1,5 @@
-import { Component, signal, inject } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router, RouterLink } from '@angular/router';
 import {
   AbstractControl,
@@ -24,6 +25,7 @@ export class RegisterPage {
   private authService = inject(AuthService);
   private router = inject(Router);
   private fb = inject(FormBuilder);
+  private destroyRef = inject(DestroyRef);
 
   registerForm = this.fb.group(
     {
@@ -68,6 +70,7 @@ export class RegisterPage {
         direccion: formData.direccion!,
         password: formData.password!,
       })
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
         next: () => void this.router.navigate(['/auth/email-enviado']),
         error: (err: HttpErrorResponse) => {
