@@ -21,22 +21,11 @@ export class OrderListPage implements OnInit {
   }
 
   cargarMisPedidos() {
-    const usuarioId = this.authService.currentUser()?.id;
-
-    if (!usuarioId) {
-      alert("No estás logueado.");
-      return;
-    }
+    const usuarioId = this.authService.currentUser()!.id;
 
     this.ordersService.obtenerMisPedidos(usuarioId).subscribe({
-      next: (datos) => {
-        this.pedidos.set(datos);
-      },
-      error: (error) => {
-        console.error("Error al cargar los pedidos", error);
-      }
+      next: (datos) => this.pedidos.set(datos),
+      error: (error) => console.error('Error al cargar los pedidos', error),
     });
   }
-
-  
 }

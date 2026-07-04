@@ -4,10 +4,10 @@ import { RouterLink } from '@angular/router';
 import { Card } from 'primeng/card';
 import { Button } from 'primeng/button';
 import { Divider } from 'primeng/divider';
+import { MessageService } from 'primeng/api';
 import { CartService } from '../../services/cart.service';
-import { HttpErrorResponse } from '@angular/common/http';
-
 import { AuthService } from '../../../auth/services/auth.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-cart-view-page',
@@ -16,30 +16,32 @@ import { AuthService } from '../../../auth/services/auth.service';
   templateUrl: './cart-view.html',
 })
 export class CartViewPage {
-  
   readonly cartService = inject(CartService);
-
   readonly authService = inject(AuthService);
+  private readonly messageService = inject(MessageService);
 
   finalizarCompra() {
-    const usuarioReal = this.authService.currentUser()?.id; 
+    const usuarioId = this.authService.currentUser()!.id;
 
-    if (!usuarioReal) {
-      alert('Debes iniciar sesión para comprar');
-      return;
-    }
-
-    this.cartService.checkout(usuarioReal).subscribe({
-      
-      next: () => { 
-        alert('¡Éxito! Tu pedido fue enviado.');
-        this.cartService.vaciar(); 
+    this.cartService.checkout(usuarioId).subscribe({
+      next: () => {
+        this.cartService.vaciar();
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Pedido confirmado',
+          detail: '¡Tu pedido fue enviado con éxito!',
+        });
       },
-      
-      error: (error: HttpErrorResponse) => { 
-        alert('Hubo un problema al crear el pedido.');
-        console.error('El error del servidor es:', error.message);
-      }
+      error: (error: HttpErrorResponse) => {
+        const detalle = error.status === 422
+          ? error.error?.error
+          : 'Hubo un problema al crear el pedido.';
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error al confirmar',
+          detail: detalle,
+        });
+      },
     });
   }
 }
