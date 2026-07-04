@@ -3,11 +3,12 @@ import { ProductService } from '../../services/products.service';
 import { Producto } from '../../interfaces/producto.interface';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ProductCardComponent } from "../../components/product-card/product-card";
+import { SearchBarComponent } from "../../components/search-bar/search-bar.component";
 
 @Component({
   selector: 'app-product-list-page',
   standalone: true,
-  imports: [ProgressSpinnerModule, ProductCardComponent],
+  imports: [ProgressSpinnerModule, ProductCardComponent, SearchBarComponent],
   templateUrl: './product-list.html',
 })
 export class ProductListPage {
@@ -19,6 +20,10 @@ export class ProductListPage {
 
   constructor() {
     this.loadProducts();
+  }
+
+  buscarProductosPorNombre(value: string) {
+    console.log(value);
   }
 
   loadProducts(categoria?: string) {
