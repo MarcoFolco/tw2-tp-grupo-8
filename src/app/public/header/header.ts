@@ -18,7 +18,8 @@ export class HeaderComponent {
 
   menuItems = computed<MenuItem[]>(() => {
     const loggedIn = this.authService.isLoggedIn();
-    const count = this.cartService.totalItems(); // 1. Obtener la cantidad de items
+    const isAdmin = this.authService.currentUser()?.rol === 'ADMIN';
+    const count = this.cartService.totalItems();
 
     return [
       {
@@ -36,6 +37,9 @@ export class HeaderComponent {
             badgeStyleClass: 'p-badge-danger'
           },
           { label: 'Mis Pedidos', icon: 'pi pi-list', routerLink: '/orders' },
+          ...(isAdmin
+            ? [{ label: 'Panel Admin', icon: 'pi pi-cog', routerLink: '/products/admin' }]
+            : []),
         ]
         : [
           { label: 'Iniciar Sesión', icon: 'pi pi-sign-in', routerLink: '/auth/login' },
